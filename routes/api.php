@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\ResetPasswordController;
+use App\Http\Controllers\Api\V1\EmailVerificationController;
 
 Route::prefix('/v1')->group(function(){
 
@@ -12,7 +13,13 @@ Route::prefix('/v1')->group(function(){
         Route::prefix('/auth')->controller(AuthController::class)->group(function(){
             Route::post('/login', 'login')->withoutMiddleware('auth:sanctum');
             Route::post('/logout', 'logout');
-        });     
+        });
+        
+        Route::prefix('/email')->controller(EmailVerificationController::class)->group(function(){
+            Route::get('/verify', 'verify')->middleware('signed')->withoutMiddleware('auth:sanctum')->name('verification.verify');
+            Route::post('/resend', 'resend')->middleware('throttle:3,1')->name('verification.resend');
+            Route::get('/verify/notice', 'notice')->middleware('throttle:6,1')->name('verification.notice');
+        });
         
     });
 

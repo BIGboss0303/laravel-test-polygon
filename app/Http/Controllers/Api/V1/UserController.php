@@ -21,6 +21,7 @@ class UserController extends Controller
         $validated['password'] = bcrypt($validated['password']);
         $user = User::create($validated);
         $user = $user->fresh();
+        $user->sendEmailVerificationNotification();
         return response()->json(
             [
                 'message' => "User registered successfully.",
