@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Api\V1\User;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,8 +14,8 @@ class RegisterRequest extends FormRequest
     {
         return true;
     }
-    
-     /**
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -23,9 +24,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'email' => 'required|email|string|max:255|unique:users',
-            'number' => 'required|numeric|min:11|unique:safe_mysql.phone_numbers,number',
-            'password' => 'required|confirmed|string|min:8|max:32'
+            'number' => ['required','numeric','min:11', Rule::unique('safe_mysql.phone_numbers')->ignore($this->user->id, 'user_id')],
         ];
     }
 }
