@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\V1\User;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserRequest extends FormRequest
@@ -23,6 +24,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
+            'number' => ['required','numeric','min:11', Rule::unique('safe_mysql.phone_numbers')->ignore($this->user->id, 'user_id')],
         ];
     }
 }

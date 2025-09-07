@@ -59,4 +59,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Post::class,'author_id', 'id');
     }
+
+    public function getNumberAttribute(): ?string
+    {
+        return PhoneNumber::where('user_id', $this->id)->first()?->number;
+    }
 }
